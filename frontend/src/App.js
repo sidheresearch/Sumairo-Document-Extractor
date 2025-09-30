@@ -143,21 +143,12 @@ function App() {
           <div className="space-y-6">
             <div className="bg-white rounded-xl p-6 card-shadow">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                1. Upload Document
+                1. Upload Document & Select Type
               </h3>
               <FileUpload
                 onFileSelect={handleFileSelect}
                 selectedFile={selectedFile}
                 onFileRemove={handleFileRemove}
-                loading={loading}
-              />
-            </div>
-
-            <div className="bg-white rounded-xl p-6 card-shadow">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                2. Select Document Type
-              </h3>
-              <DocumentTypeSelector
                 selectedType={documentType}
                 onTypeChange={setDocumentType}
                 loading={loading}

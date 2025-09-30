@@ -178,6 +178,16 @@ const ResultDisplay = ({ result, error }) => {
             </div>
           </div>
         )}
+
+        {/* Formatted output from LLM */}
+        {result.formatted_output && (
+          <div>
+            <h4 className="text-md font-medium text-green-900 mb-2">Formatted Output</h4>
+            <div className="bg-white p-4 rounded border">
+              <pre className="text-sm whitespace-pre-wrap break-words">{result.formatted_output}</pre>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -1,9 +1,10 @@
 import React, { useCallback } from 'react';
+import DocumentTypeSelector from './DocumentTypeSelector';
 import { useDropzone } from 'react-dropzone';
 import { Upload, FileText, Image, X } from 'lucide-react';
 import { formatFileSize } from '../services/api';
 
-const FileUpload = ({ onFileSelect, selectedFile, onFileRemove, loading }) => {
+const FileUpload = ({ onFileSelect, selectedFile, onFileRemove, selectedType, onTypeChange, loading }) => {
   const onDrop = useCallback((acceptedFiles, rejectedFiles) => {
     if (rejectedFiles.length > 0) {
       const rejection = rejectedFiles[0];
@@ -46,7 +47,12 @@ const FileUpload = ({ onFileSelect, selectedFile, onFileRemove, loading }) => {
   };
 
   return (
-    <div className="w-full">
+    <div className="w-full space-y-6">
+      <DocumentTypeSelector
+        selectedType={selectedType}
+        onTypeChange={onTypeChange}
+        loading={loading}
+      />
       {!selectedFile ? (
         <div
           {...getRootProps()}

@@ -15,6 +15,9 @@ export const DOCUMENT_TYPES = {
   BUSINESS_CARD: 'BusinessCard',
   TENDER_DOCUMENT: 'TenderDocument',
   PERSON: 'Person',
+  LC_DETAILS: 'LCDetails',
+  DOCUMENTARY_CREDIT: 'DocumentaryCredit',
+  LC1: 'LC1',
   TRANSLATE_TEXT: 'TranslateText'
 };
 
@@ -25,6 +28,9 @@ export const DOCUMENT_TYPE_DESCRIPTIONS = {
   [DOCUMENT_TYPES.BUSINESS_CARD]: 'Extract contact information from business cards',
   [DOCUMENT_TYPES.TENDER_DOCUMENT]: 'Extract comprehensive tender document information',
   [DOCUMENT_TYPES.PERSON]: 'Extract person information including name, age, and work topics',
+  [DOCUMENT_TYPES.LC_DETAILS]: 'Extract details from a Letter of Credit document',
+  [DOCUMENT_TYPES.DOCUMENTARY_CREDIT]: 'Extract all relevant information from a documentary credit application',
+  [DOCUMENT_TYPES.LC1]: 'Extract all relevant information from a letter of credit application',
   [DOCUMENT_TYPES.TRANSLATE_TEXT]: 'Extract and translate text from documents'
 };
 

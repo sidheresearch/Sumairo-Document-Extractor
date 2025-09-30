@@ -1,6 +1,6 @@
 import React from 'react';
 import { DOCUMENT_TYPES, DOCUMENT_TYPE_DESCRIPTIONS } from '../services/api';
-import { FileText, CreditCard, Building, User, Languages, FileImage } from 'lucide-react';
+import { FileText, CreditCard, Building, User, Languages, FileImage, FileSignature, FileBadge, FileCheck2 } from 'lucide-react';
 
 const DocumentTypeSelector = ({ selectedType, onTypeChange, loading }) => {
   const getIcon = (type) => {
@@ -11,8 +11,16 @@ const DocumentTypeSelector = ({ selectedType, onTypeChange, loading }) => {
         return <CreditCard className="w-5 h-5" />;
       case DOCUMENT_TYPES.TENDER_DOCUMENT:
         return <Building className="w-5 h-5" />;
+      case DOCUMENT_TYPES.FORM:
+        return <FileBadge className="w-5 h-5" />;
       case DOCUMENT_TYPES.PERSON:
         return <User className="w-5 h-5" />;
+      case DOCUMENT_TYPES.LC_DETAILS:
+        return <FileSignature className="w-5 h-5" />;
+      case DOCUMENT_TYPES.DOCUMENTARY_CREDIT:
+        return <FileCheck2 className="w-5 h-5" />;
+      case DOCUMENT_TYPES.LC1:
+        return <FileBadge className="w-5 h-5" />;
       case DOCUMENT_TYPES.TRANSLATE_TEXT:
         return <Languages className="w-5 h-5" />;
       default:
@@ -45,6 +53,21 @@ const DocumentTypeSelector = ({ selectedType, onTypeChange, loading }) => {
       value: DOCUMENT_TYPES.PERSON,
       label: 'Person Info',
       description: DOCUMENT_TYPE_DESCRIPTIONS[DOCUMENT_TYPES.PERSON]
+    },
+    {
+      value: DOCUMENT_TYPES.LC_DETAILS,
+      label: 'LC Details',
+      description: DOCUMENT_TYPE_DESCRIPTIONS[DOCUMENT_TYPES.LC_DETAILS]
+    },
+    {
+      value: DOCUMENT_TYPES.DOCUMENTARY_CREDIT,
+      label: 'Documentary Credit',
+      description: DOCUMENT_TYPE_DESCRIPTIONS[DOCUMENT_TYPES.DOCUMENTARY_CREDIT]
+    },
+    {
+      value: DOCUMENT_TYPES.LC1,
+      label: 'LC1',
+      description: DOCUMENT_TYPE_DESCRIPTIONS[DOCUMENT_TYPES.LC1]
     },
     {
       value: DOCUMENT_TYPES.TRANSLATE_TEXT,

@@ -65,7 +65,8 @@ def format_extraction_response(
     document_type: str,
     filename: str,
     data: Any = None,
-    error: str = None
+    error: str = None,
+    formatted_output: str = None
 ) -> Dict[str, Any]:
     """Format extraction API response"""
     response = {
@@ -73,12 +74,12 @@ def format_extraction_response(
         "document_type": document_type,
         "filename": filename
     }
-    
     if success and data:
         response["data"] = data.model_dump() if hasattr(data, 'model_dump') else data
+    if success and formatted_output:
+        response["formatted_output"] = formatted_output
     elif not success and error:
         response["error"] = error
-    
     return response
 
 def format_translation_response(

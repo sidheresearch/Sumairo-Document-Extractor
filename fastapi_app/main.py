@@ -48,6 +48,9 @@ class DocumentType(str, Enum):
     BUSINESS_CARD = "BusinessCard"
     TENDER_DOCUMENT = "TenderDocument"
     PERSON = "Person"
+    LC_DETAILS = "LCDetails"
+    DOCUMENTARY_CREDIT = "DocumentaryCredit"
+    LC1 = "LC1"
     TRANSLATE_TEXT = "TranslateText"
 
 @app.get("/")
@@ -101,9 +104,12 @@ async def extract_document_data(
             DocumentType.FORM: Form,
             DocumentType.BUSINESS_CARD: BusinessCard,
             DocumentType.TENDER_DOCUMENT: TenderDocument,
-            DocumentType.PERSON: Person
+            DocumentType.PERSON: Person,
+            DocumentType.LC_DETAILS: LCDetails,
+            DocumentType.DOCUMENTARY_CREDIT: DocumentaryCredit,
+            DocumentType.LC1: LC1
         }
-        
+
         selected_model = model_mapping.get(document_type)
         if not selected_model:
             raise HTTPException(
@@ -122,14 +128,17 @@ async def extract_document_data(
                 temp_file_path, 
                 selected_model
             )
-            
+            # Format output using LLM if extraction succeeded
+            formatted_output = None
+            if extracted_data:
+                formatted_output = await extraction_service.format_data_with_llm(extracted_data)
             return format_extraction_response(
                 success=True,
                 document_type=document_type.value,
                 filename=file.filename,
-                data=extracted_data
+                data=extracted_data,
+                formatted_output=formatted_output
             )
-            
         finally:
             # Clean up temporary file
             if os.path.exists(temp_file_path):
@@ -203,30 +212,15 @@ async def get_supported_document_types():
     """Get list of supported document types"""
     return {
         "supported_types": [
-            {
-                "type": "Invoice",
-                "description": "Extract invoice number, date, items, and total gross worth"
-            },
-            {
-                "type": "Form", 
-                "description": "Extract form number, dates, and plan liabilities"
-            },
-            {
-                "type": "BusinessCard",
-                "description": "Extract contact information from business cards"
-            },
-            {
-                "type": "TenderDocument", 
-                "description": "Extract comprehensive tender document information"
-            },
-            {
-                "type": "Person",
-                "description": "Extract person information including name, age, and work topics"
-            },
-            {
-                "type": "TranslateText",
-                "description": "Extract and translate text from documents"
-            }
+            {"type": "Invoice", "description": "Extract invoice number, date, items, and total gross worth"},
+            {"type": "Form", "description": "Extract form number, dates, and plan liabilities"},
+            {"type": "BusinessCard", "description": "Extract contact information from business cards"},
+            {"type": "TenderDocument", "description": "Extract comprehensive tender document information"},
+            {"type": "Person", "description": "Extract person information including name, age, and work topics"},
+            {"type": "LCDetails", "description": "Extract details from a Letter of Credit document"},
+            {"type": "DocumentaryCredit", "description": "Extract all relevant information from a documentary credit application"},
+            {"type": "LC1", "description": "Extract all relevant information from a letter of credit application"},
+            {"type": "TranslateText", "description": "Extract and translate text from documents"}
         ]
     }
 
