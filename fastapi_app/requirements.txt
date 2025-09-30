@@ -1,0 +1,11 @@
+fastapi>=0.104.1
+uvicorn[standard]>=0.24.0
+python-multipart>=0.0.6
+google-genai>=1.0.0
+deep-translator>=1.11.4
+googletrans-py>=1.5.0
+python-dotenv>=1.0.0
+pydantic>=2.5.0
+typing-extensions>=4.8.0
+python-magic-bin>=0.4.14  # For Windows MIME type detection
+tenacity>=8.2.0  # For retry logic

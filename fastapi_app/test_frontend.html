@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document Extractor - Test Frontend</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+        input[type="file"], select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        .results {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            border-left: 4px solid #007bff;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border-left-color: #dc3545;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border-left-color: #28a745;
+        }
+        pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            background-color: #f1f1f1;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        .loading {
+            text-align: center;
+            color: #666;
+        }
+        .api-info {
+            background-color: #e9ecef;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📄 Document Extractor API Test Frontend</h1>
+        
+        <div class="api-info">
+            <strong>API Base URL:</strong> <span id="apiUrl">http://localhost:8000</span><br>
+            <strong>Supported Files:</strong> PDF, JPG, JPEG, PNG (Max 10MB)
+        </div>
+
+        <form id="uploadForm">
+            <div class="form-group">
+                <label for="fileInput">Select Document:</label>
+                <input type="file" id="fileInput" accept=".pdf,.jpg,.jpeg,.png" required>
+            </div>
+
+            <div class="form-group">
+                <label for="documentType">Document Type:</label>
+                <select id="documentType" required>
+                    <option value="Invoice">Invoice</option>
+                    <option value="Form">Form</option>
+                    <option value="BusinessCard">Business Card</option>
+                    <option value="TenderDocument">Tender Document</option>
+                    <option value="Person">Person</option>
+                    <option value="TranslateText">Extract & Translate Text</option>
+                </select>
+            </div>
+
+            <button type="submit" id="extractBtn">Extract Data</button>
+            <button type="button" id="translateBtn" onclick="translateOnly()">Translate Only</button>
+        </form>
+
+        <div id="results" class="results" style="display: none;">
+            <h3>Results:</h3>
+            <div id="resultsContent"></div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:8000';
+        
+        document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            await processDocument('/extract');
+        });
+
+        async function translateOnly() {
+            await processDocument('/translate');
+        }
+
+        async function processDocument(endpoint) {
+            const fileInput = document.getElementById('fileInput');
+            const documentType = document.getElementById('documentType');
+            const resultsDiv = document.getElementById('results');
+            const resultsContent = document.getElementById('resultsContent');
+            const extractBtn = document.getElementById('extractBtn');
+            const translateBtn = document.getElementById('translateBtn');
+
+            if (!fileInput.files[0]) {
+                alert('Please select a file');
+                return;
+            }
+
+            // Show loading state
+            extractBtn.disabled = true;
+            translateBtn.disabled = true;
+            extractBtn.textContent = 'Processing...';
+            translateBtn.textContent = 'Processing...';
+            
+            resultsDiv.style.display = 'block';
+            resultsDiv.className = 'results loading';
+            resultsContent.innerHTML = '<p>Processing document... This may take a few moments.</p>';
+
+            try {
+                const formData = new FormData();
+                formData.append('file', fileInput.files[0]);
+                
+                if (endpoint === '/extract') {
+                    formData.append('document_type', documentType.value);
+                }
+
+                const response = await fetch(API_BASE_URL + endpoint, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    resultsDiv.className = 'results success';
+                    resultsContent.innerHTML = `
+                        <h4>✅ Success!</h4>
+                        <p><strong>File:</strong> ${result.filename}</p>
+                        ${result.document_type ? `<p><strong>Document Type:</strong> ${result.document_type}</p>` : ''}
+                        ${result.token_count ? `<p><strong>Token Count:</strong> ${result.token_count}</p>` : ''}
+                        <h4>Extracted Data:</h4>
+                        <pre>${JSON.stringify(result.data || {
+                            extracted_text: result.extracted_text,
+                            translated_text: result.translated_text,
+                            detected_language: result.detected_language
+                        }, null, 2)}</pre>
+                    `;
+                } else {
+                    resultsDiv.className = 'results error';
+                    resultsContent.innerHTML = `
+                        <h4>❌ Error</h4>
+                        <p><strong>Message:</strong> ${result.error || 'Unknown error occurred'}</p>
+                        ${result.detail ? `<p><strong>Details:</strong> ${result.detail}</p>` : ''}
+                    `;
+                }
+            } catch (error) {
+                resultsDiv.className = 'results error';
+                resultsContent.innerHTML = `
+                    <h4>❌ Network Error</h4>
+                    <p><strong>Message:</strong> ${error.message}</p>
+                    <p>Make sure the API server is running at ${API_BASE_URL}</p>
+                `;
+            } finally {
+                // Reset button states
+                extractBtn.disabled = false;
+                translateBtn.disabled = false;
+                extractBtn.textContent = 'Extract Data';
+                translateBtn.textContent = 'Translate Only';
+            }
+        }
+
+        // Check API health on page load
+        window.addEventListener('load', async () => {
+            try {
+                const response = await fetch(API_BASE_URL + '/health');
+                const result = await response.json();
+                
+                if (result.status === 'healthy') {
+                    console.log('✅ API is healthy');
+                } else {
+                    console.warn('⚠️ API health check failed');
+                }
+            } catch (error) {
+                console.error('❌ Cannot connect to API:', error);
+                alert('Warning: Cannot connect to API server. Make sure it\'s running at ' + API_BASE_URL);
+            }
+        });
+    </script>
+</body>
+</html>
