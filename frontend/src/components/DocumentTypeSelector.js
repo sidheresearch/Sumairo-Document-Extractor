@@ -1,6 +1,6 @@
 import React from 'react';
 import { DOCUMENT_TYPES, DOCUMENT_TYPE_DESCRIPTIONS } from '../services/api';
-import { FileText, CreditCard, Building, User, Languages, FileImage, FileSignature, FileBadge, FileCheck2 } from 'lucide-react';
+import { FileText, CreditCard, Building, User, Languages, FileImage, FileSignature, FileBadge, FileCheck2, ShoppingCart } from 'lucide-react';
 
 const DocumentTypeSelector = ({ selectedType, onTypeChange, loading }) => {
   const getIcon = (type) => {
@@ -15,6 +15,8 @@ const DocumentTypeSelector = ({ selectedType, onTypeChange, loading }) => {
         return <FileBadge className="w-5 h-5" />;
       case DOCUMENT_TYPES.PERSON:
         return <User className="w-5 h-5" />;
+      case DOCUMENT_TYPES.PURCHASE_ORDER:
+        return <ShoppingCart className="w-5 h-5" />;
       case DOCUMENT_TYPES.LC_DETAILS:
         return <FileSignature className="w-5 h-5" />;
       case DOCUMENT_TYPES.DOCUMENTARY_CREDIT:
@@ -53,6 +55,11 @@ const DocumentTypeSelector = ({ selectedType, onTypeChange, loading }) => {
       value: DOCUMENT_TYPES.PERSON,
       label: 'Person Info',
       description: DOCUMENT_TYPE_DESCRIPTIONS[DOCUMENT_TYPES.PERSON]
+    },
+    {
+      value: DOCUMENT_TYPES.PURCHASE_ORDER,
+      label: 'Purchase Order',
+      description: DOCUMENT_TYPE_DESCRIPTIONS[DOCUMENT_TYPES.PURCHASE_ORDER]
     },
     {
       value: DOCUMENT_TYPES.LC_DETAILS,

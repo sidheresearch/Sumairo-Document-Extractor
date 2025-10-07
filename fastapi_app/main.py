@@ -48,6 +48,7 @@ class DocumentType(str, Enum):
     BUSINESS_CARD = "BusinessCard"
     TENDER_DOCUMENT = "TenderDocument"
     PERSON = "Person"
+    PURCHASE_ORDER = "PurchaseOrder"
     LC_DETAILS = "LCDetails"
     DOCUMENTARY_CREDIT = "DocumentaryCredit"
     LC1 = "LC1"
@@ -105,6 +106,7 @@ async def extract_document_data(
             DocumentType.BUSINESS_CARD: BusinessCard,
             DocumentType.TENDER_DOCUMENT: TenderDocument,
             DocumentType.PERSON: Person,
+            DocumentType.PURCHASE_ORDER: PurchaseOrder,
             DocumentType.LC_DETAILS: LCDetails,
             DocumentType.DOCUMENTARY_CREDIT: DocumentaryCredit,
             DocumentType.LC1: LC1
@@ -217,6 +219,7 @@ async def get_supported_document_types():
             {"type": "BusinessCard", "description": "Extract contact information from business cards"},
             {"type": "TenderDocument", "description": "Extract comprehensive tender document information"},
             {"type": "Person", "description": "Extract person information including name, age, and work topics"},
+            {"type": "PurchaseOrder", "description": "Extract purchase order details including product, quantities, rates, and delivery information"},
             {"type": "LCDetails", "description": "Extract details from a Letter of Credit document"},
             {"type": "DocumentaryCredit", "description": "Extract all relevant information from a documentary credit application"},
             {"type": "LC1", "description": "Extract all relevant information from a letter of credit application"},

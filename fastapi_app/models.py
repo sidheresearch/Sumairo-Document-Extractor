@@ -30,6 +30,29 @@ class BusinessCard(BaseModel):
     website: str = Field(description="The website on the business card")
     address: str = Field(description="The address on the business card")
 
+class PurchaseOrder(BaseModel):
+    """Extract information from a purchase order document."""
+    order_id: Optional[str] = Field(None, description="Order ID (e.g., ORD5)")
+    product: Optional[str] = Field(None, description="Product name (e.g., TOLUENE)")
+    purchase_order_id: Optional[str] = Field(None, description="Purchase Order ID")
+    purchase_order_date: Optional[str] = Field(None, description="Purchase Order Date (DD-MM-YYYY format)")
+    total_order_quantity: Optional[float] = Field(None, description="Total Order Quantity")
+    total_order_quantity_unit: Optional[str] = Field(None, description="Unit for total order quantity (e.g., MT)")
+    order_remaining_quantity: Optional[float] = Field(None, description="Order Remaining Quantity")
+    order_remaining_quantity_unit: Optional[str] = Field(None, description="Unit for order remaining quantity (e.g., MT)")
+    purchase_order_quantity: Optional[float] = Field(None, description="Purchase Order Quantity")
+    purchase_order_quantity_unit: Optional[str] = Field(None, description="Unit for purchase order quantity (e.g., MT)")
+    rate: Optional[float] = Field(None, description="Rate per unit")
+    po_amount: Optional[float] = Field(None, description="Total PO Amount")
+    bill_to_address: Optional[str] = Field(None, description="Bill To Address")
+    ship_to_address: Optional[str] = Field(None, description="Ship To Address")
+    inco_term: Optional[str] = Field(None, description="INCO Term (e.g., FOB, CIF)")
+    pick_up_port: Optional[str] = Field(None, description="Pick Up Port")
+    storage_period_till: Optional[str] = Field(None, description="Storage Period till date (DD-MM-YYYY)")
+    customer_instruction: Optional[str] = Field(None, description="Customer's Instruction or special notes")
+    delivery_location: Optional[str] = Field(None, description="Delivery Location (city)")
+    delivery_pin_code: Optional[str] = Field(None, description="Delivery Pin Code")
+
 class TenderDocument(BaseModel):
     """Extract key information from a tender document."""
     tender_title: Optional[str] = Field(None, description="The title of the tender document.")
